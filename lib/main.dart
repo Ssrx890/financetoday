@@ -130,24 +130,31 @@ class ExpenseProvider with ChangeNotifier {
   }
 
   Future<bool> sendReportToN8n(String email) async {
-    const webhookUrl = "https://n8n-url.com/webhook/finance-report";
-    try {
-      final response = await http
-          .post(
-            Uri.parse(webhookUrl),
-            body: jsonEncode({
-              "email": email,
-              "total_spent": total,
-              "expenses": expenses,
-            }),
-            headers: {"Content-Type": "application/json"},
-          )
-          .timeout(const Duration(seconds: 10));
-      return response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
+  // 1. Reemplaza con tu URL real de n8n
+  const webhookUrl = "https://fluttersam.app.n8n.cloud/webhook/finance-report";
+  try {
+    
+    final List<Map<String, dynamic>> expensesData = expenses.map((e) {
+      return Map<String, dynamic>.from(e as Map);
+    }).toList();
+
+    final response = await http.post(
+      Uri.parse(webhookUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "email": email,
+        "total_spent": total,
+        "expenses": expensesData, // Datos limpios
+        "timestamp": DateTime.now().toIso8601String(),
+      }),
+    ).timeout(const Duration(seconds: 15));
+
+    return response.statusCode == 200;
+  } catch (e) {
+    debugPrint("Error en n8n: $e");
+    return false;
   }
+}
 }
 
 class AuthProvider with ChangeNotifier {
