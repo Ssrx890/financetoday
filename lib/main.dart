@@ -131,7 +131,7 @@ class ExpenseProvider with ChangeNotifier {
 
   Future<bool> sendReportToN8n(String email) async {
   // 1. Reemplaza con tu URL real de n8n
-  const webhookUrl = "https://fluttersam.app.n8n.cloud/webhook/finance-report";
+  const webhookUrl = "https://samnochon.app.n8n.cloud/webhook-test/analizar-datos";
   try {
     
     final List<Map<String, dynamic>> expensesData = expenses.map((e) {
